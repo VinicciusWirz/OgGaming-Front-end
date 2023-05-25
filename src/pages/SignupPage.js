@@ -4,9 +4,16 @@ import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 import apiAuth from "../services/apiAuth";
 
-export default function SigninPage() {
+export default function SignupPage() {
   const { session, setSession } = useContext(SessionContext);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    bio: "",
+    picture: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [loading, setLoading] = useState(false);
   const navivate = useNavigate();
 
@@ -23,15 +30,12 @@ export default function SigninPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await apiAuth.signin(form);
-      setSession(data);
-      const localData = JSON.stringify(data);
-      localStorage.setItem("session", localData);
+      await apiAuth.signup(form);
       setLoading(false);
-      navivate("/");
+      navivate("/signin");
     } catch (error) {
       setLoading(false);
-      if (error.response.status === 404 || error.response.status === 401) {
+      if (error.response.status === 409) {
         alert(`${error.response.status}: Invalid credentials`);
       }
       if (error.response.status === 422) {
@@ -42,8 +46,21 @@ export default function SigninPage() {
   return (
     <PageContainer>
       <div>
-        Login
+        Cadastro
         <form onSubmit={handleSubmit}>
+          <label>
+            Nome:
+            <input
+              placeholder="Digite seu nome"
+              required
+              type="text"
+              name="name"
+              autoComplete="name"
+              value={form.name}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </label>
           <label>
             E-mail:
             <input
@@ -53,6 +70,31 @@ export default function SigninPage() {
               name="email"
               autoComplete="email"
               value={form.email}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </label>
+          <label>
+            Foto de perfil:
+            <input
+              placeholder="Insira uma url válida"
+              required
+              type="url"
+              name="picture"
+              value={form.picture}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </label>
+          <label>
+            Biografia (até 200 caracteres):
+            <textarea
+              placeholder="Digite uma breve descrição"
+              required
+              type="text"
+              name="bio"
+              maxLength={200}
+              value={form.bio}
               onChange={handleChange}
               disabled={loading}
             />
@@ -71,13 +113,27 @@ export default function SigninPage() {
               disabled={loading}
             />
           </label>
+          <label>
+            Confirme sua senha:
+            <input
+              placeholder="Confirme sua senha"
+              required
+              type="password"
+              name="confirmPassword"
+              autoComplete="password"
+              minLength="3"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </label>
           <button type="submit" disabled={loading}>
-            Entrar
+            Fazer cadastro
           </button>
         </form>
         <div>
-          Ainda não possui uma conta?
-          <Link to="/signup">Cadastre-se</Link>
+          Já possui uma conta?
+          <Link to="/signin">Faça login</Link>
         </div>
       </div>
     </PageContainer>
@@ -120,7 +176,8 @@ const PageContainer = styled.main`
       flex-direction: column;
       gap: 7px;
       width: 100%;
-      input {
+      input,
+      textarea {
         padding: 10px;
         border-radius: 5px;
         border: 1px solid lightGray;
@@ -131,6 +188,10 @@ const PageContainer = styled.main`
         &:disabled {
           background: #ebe9e8;
         }
+      }
+      textarea {
+        resize: none;
+        height: 70px;
       }
     }
     button {

@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { styled } from "styled-components";
 import Header from "./components/Header";
-import Menu from "./components/Menu";
 import { SessionProvider } from "./contexts/SessionContext";
 import SigninPage from "./pages/SigninPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <PageStyle>
           <Routes>
             <Route path="/signin" element={<SigninPage />} />
-            <Route path="/signup" element="" />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/" element="" />
             <Route path="/folowers" element="" />
             <Route path="/folowing" element="" />
@@ -29,7 +29,6 @@ function App() {
 const PageStyle = styled.div`
   font-family: "Roboto", sans-serif;
   margin-top: 65px;
-  /* background: #f7f4f3; */
 `;
 
 export default App;
