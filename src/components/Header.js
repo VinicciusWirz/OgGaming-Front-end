@@ -1,23 +1,31 @@
 import { styled } from "styled-components";
 import { BsJoystick } from "react-icons/bs";
+import SessionContext from "../contexts/SessionContext";
+import { useContext } from "react";
 
 export default function Header() {
+  const { session } = useContext(SessionContext);
+
   return (
-    <HeaderStyle>
-      <LogoStyle>
-        <BsJoystick />
-        <h1>OgGaming</h1>
-      </LogoStyle>
-      <NavStyle>
-        <div>
-          <img src="https://cdn.discordapp.com/attachments/1103429536101695651/1111165947093459045/EEUy6MCU0AErfve.png" />
-        </div>
-        <div>
-          <p>Nome</p>
-          <p>@username123456789</p>
-        </div>
-      </NavStyle>
-    </HeaderStyle>
+    <>
+      <HeaderStyle>
+        <LogoStyle>
+          <BsJoystick />
+          <h1>OgGaming</h1>
+        </LogoStyle>
+        {session && (
+          <NavStyle>
+            <div>
+              <img src={session.image} alt="profile" />
+            </div>
+            <div>
+              <p>{session.name}</p>
+              <p>@{session.username}</p>
+            </div>
+          </NavStyle>
+        )}
+      </HeaderStyle>
+    </>
   );
 }
 
@@ -33,6 +41,7 @@ const HeaderStyle = styled.header`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 999;
   width: 100vw;
   * {
     background: #ffff;
@@ -43,7 +52,7 @@ const LogoStyle = styled.div`
   gap: 5px;
   font-size: 22px;
 `;
-const NavStyle = styled.nav`
+const NavStyle = styled.section`
   display: flex;
   gap: 10px;
   width: 15%;
@@ -58,7 +67,7 @@ const NavStyle = styled.nav`
     }
   }
   div:nth-child(2) {
-    overflow-x: hidden;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -66,6 +75,7 @@ const NavStyle = styled.nav`
     p {
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 16px;
     }
     p:nth-child(2) {
       font-size: 12px;

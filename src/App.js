@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { styled } from "styled-components";
 import Header from "./components/Header";
+import Menu from "./components/Menu";
 import { SessionProvider } from "./contexts/SessionContext";
 import SigninPage from "./pages/SigninPage";
 
@@ -11,9 +12,9 @@ function App() {
         <Header />
         <PageStyle>
           <Routes>
-            <Route path="/" element="" />
             <Route path="/signin" element={<SigninPage />} />
             <Route path="/signup" element="" />
+            <Route path="/" element="" />
             <Route path="/folowers" element="" />
             <Route path="/folowing" element="" />
             <Route path="/search" element="" />
