@@ -6,7 +6,7 @@ import UserListItem from "../components/UserListItem";
 import SessionContext from "../contexts/SessionContext";
 import apiUsers from "../services/apiUsers";
 
-export default function FollowersPage() {
+export default function FollowingPage() {
   const { session } = useContext(SessionContext);
   const navigate = useNavigate();
   const [userInfoRender, setUserInfoRender] = useState([]);
@@ -14,13 +14,13 @@ export default function FollowersPage() {
     if (!session) {
       navigate("/signin");
     } else {
-      fetchFollowers();
+      fetchFollowings();
     }
   }, []);
 
-  async function fetchFollowers() {
+  async function fetchFollowings() {
     try {
-      const { data } = await apiUsers.findFollowers(session.token);
+      const { data } = await apiUsers.findFollowing(session.token);
       setUserInfoRender(data);
     } catch (error) {
       if (error.response.status === 401) {
@@ -33,7 +33,7 @@ export default function FollowersPage() {
     <PageStyle>
       <Menu />
       <Container>
-        Meus seguidores
+        Quem eu sigo
         {userInfoRender.map((user) => (
           <UserListItem
             key={user.id}
