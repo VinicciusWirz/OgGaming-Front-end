@@ -7,5 +7,9 @@ function followUser(token, username) {
   return axios.post(`${url}/follow/${username}`, {}, headerGen(token));
 }
 
-const apiUsers = { followUser };
+function findFollowers(token) {
+  return axios.get(`${url}/followers`, headerGen(token));
+}
+
+const apiUsers = { followUser, findFollowers };
 export default apiUsers;

@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { styled } from "styled-components";
 import Header from "./components/Header";
 import { SessionProvider } from "./contexts/SessionContext";
+import FollowersPage from "./pages/FollowersPage";
 import HomePage from "./pages/HomePage";
 import SigninPage from "./pages/SigninPage";
 import SignupPage from "./pages/SignupPage";
@@ -17,10 +18,10 @@ function App() {
             <Route path="/signin" element={<SigninPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/" element={<HomePage />} />
-            <Route path="/folowers" element="" />
-            <Route path="/folowing" element="" />
+            <Route path="/followers" element={<FollowersPage />} />
+            <Route path="/following" element="" />
             <Route path="/search" element="" />
-            <Route path="/:username" element={<UserPage/>} />
+            <Route path="/:username" element={<UserPage />} />
           </Routes>
         </PageStyle>
       </SessionProvider>
