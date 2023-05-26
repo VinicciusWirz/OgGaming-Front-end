@@ -2,14 +2,16 @@ import { styled } from "styled-components";
 import { BsJoystick } from "react-icons/bs";
 import SessionContext from "../contexts/SessionContext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { session } = useContext(SessionContext);
+  const navigate = useNavigate();
 
   return (
     <>
       <HeaderStyle>
-        <LogoStyle>
+        <LogoStyle onClick={() => navigate("/")}>
           <BsJoystick />
           <h1>OgGaming</h1>
         </LogoStyle>
@@ -51,6 +53,7 @@ const LogoStyle = styled.div`
   display: flex;
   gap: 5px;
   font-size: 22px;
+  cursor: pointer;
 `;
 const NavStyle = styled.section`
   display: flex;

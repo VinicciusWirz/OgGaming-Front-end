@@ -15,6 +15,7 @@ export default function HomePage() {
   const [form, setForm] = useState({ image: "", content: "" });
   const [userInfoRender, setUserInfoRender] = useState(null);
   const [posts, setPosts] = useState([]);
+
   useEffect(() => {
     if (!session) {
       navivate("/signin");
@@ -22,6 +23,7 @@ export default function HomePage() {
       getPosts();
     }
   }, []);
+
   async function getPosts() {
     try {
       const { data } = await apiPosts.getSelfPosts(session.token);
@@ -63,6 +65,7 @@ export default function HomePage() {
       }
     }
   }
+
   return (
     <PageStyle>
       {showModal && (
@@ -102,6 +105,7 @@ export default function HomePage() {
                 Postar
               </button>
             </form>
+            <CloseFormBtn onMouseDown={makePostModal}>X</CloseFormBtn>
           </div>
         </NewPostModal>
       )}
@@ -275,10 +279,11 @@ const NewPostModal = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    width: 50%;
     gap: 20px;
     padding: 30px;
     border-radius: 5px;
+    position: relative;
   }
   form {
     font-size: 14px;
@@ -325,4 +330,13 @@ const NewPostModal = styled.div`
       }
     }
   }
+`;
+
+const CloseFormBtn = styled.div`
+  position: absolute;
+  cursor: pointer;
+  top: 20px;
+  right: 20px;
+  color: rgb(215, 0, 0);
+  background: none;
 `;
