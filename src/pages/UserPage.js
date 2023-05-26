@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { TailSpin } from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import Menu from "../components/Menu";
@@ -9,13 +10,15 @@ import apiUsers from "../services/apiUsers";
 
 export default function UserPage() {
   const { session } = useContext(SessionContext);
-  const [userInfoRender, setUserInfoRender] = useState({ posts: [] });
+  const [userInfoRender, setUserInfoRender] = useState();
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const username = params.username;
+
   useEffect(() => {
     fetchPostList();
   }, []);
+
   async function fetchPostList() {
     try {
       const { data } = await apiPosts.getUserPosts(username, session.token);
@@ -24,6 +27,7 @@ export default function UserPage() {
       console.log(error);
     }
   }
+
   async function followUser() {
     if (session) {
       setLoading(true);
@@ -41,37 +45,57 @@ export default function UserPage() {
       alert("Você precisa estar logado para seguir outros usuários");
     }
   }
+
   return (
     <PageStyle>
       <Menu />
       <Container>
-        <div>
-          <UserInfo>
-            <img src={userInfoRender.profile_image} alt="profile" />
+        {!userInfoRender ? (
+          <article>
+            <TailSpin
+              height="80"
+              width="80"
+              color="#678698"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </article>
+        ) : (
+          <>
             <div>
-              <Desc>
-                <p>
-                  {userInfoRender.name}
-                  <span>@{userInfoRender.username}</span>
-                </p>
-                <span>{userInfoRender.bio}</span>
-              </Desc>
-              <ButtonWrapper>
-                <button onClick={followUser} disabled={!session || loading}>
-                  {userInfoRender.is_following ? "Deixar de seguir" : "Seguir"}
-                </button>
-                <FollowNotice>
-                  {userInfoRender.is_follower && "este usuário segue você"}
-                </FollowNotice>
-              </ButtonWrapper>
+              <UserInfo>
+                <img src={userInfoRender.profile_image} alt="profile" />
+                <div>
+                  <Desc>
+                    <p>
+                      {userInfoRender.name}
+                      <span>@{userInfoRender.username}</span>
+                    </p>
+                    <span>{userInfoRender.bio}</span>
+                  </Desc>
+                  <ButtonWrapper>
+                    <button onClick={followUser} disabled={!session || loading}>
+                      {userInfoRender.is_following
+                        ? "Deixar de seguir"
+                        : "Seguir"}
+                    </button>
+                    <FollowNotice>
+                      {userInfoRender.is_follower && "este usuário segue você"}
+                    </FollowNotice>
+                  </ButtonWrapper>
+                </div>
+              </UserInfo>
             </div>
-          </UserInfo>
-        </div>
-        <Posts>
-          {userInfoRender.posts.map((p) => (
-            <PostItem key={p.id} post={p} token={session.token} />
-          ))}
-        </Posts>
+            <Posts>
+              {userInfoRender.posts.map((p) => (
+                <PostItem key={p.id} post={p} token={session.token} />
+              ))}
+            </Posts>
+          </>
+        )}
       </Container>
     </PageStyle>
   );
@@ -100,6 +124,11 @@ const Container = styled.div`
       background: #ffff;
     }
     background: #ffff;
+  }
+  article:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 `;
 

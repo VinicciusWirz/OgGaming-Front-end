@@ -48,12 +48,12 @@ export default function UserListItem(props) {
 
   return (
     <>
-      <div>
+      <div onClick={goToUserPage}>
         <UserInfo>
-          <img src={user.profile_image} alt="profile" onClick={goToUserPage} />
+          <img src={user.profile_image} alt="profile" />
           <div>
             <Desc>
-              <p onClick={goToUserPage}>
+              <p>
                 {user.name}
                 <span>@{user.username}</span>
               </p>
