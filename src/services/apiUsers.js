@@ -15,5 +15,9 @@ function findFollowing(token) {
   return axios.get(`${url}/following`, headerGen(token));
 }
 
-const apiUsers = { followUser, findFollowers, findFollowing };
+function findQuery(token, name) {
+  return axios.get(`${url}/search/${name}`, headerGen(token));
+}
+
+const apiUsers = { followUser, findFollowers, findFollowing, findQuery };
 export default apiUsers;

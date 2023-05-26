@@ -5,6 +5,7 @@ import { SessionProvider } from "./contexts/SessionContext";
 import FollowersPage from "./pages/FollowersPage";
 import FollowingPage from "./pages/FollowingPage";
 import HomePage from "./pages/HomePage";
+import SearchPage from "./pages/SearchPage";
 import SigninPage from "./pages/SigninPage";
 import SignupPage from "./pages/SignupPage";
 import UserPage from "./pages/UserPage";
@@ -20,8 +21,8 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/followers" element={<FollowersPage />} />
-            <Route path="/following" element={<FollowingPage/>} />
-            <Route path="/search" element="" />
+            <Route path="/following" element={<FollowingPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/:username" element={<UserPage />} />
           </Routes>
         </PageStyle>

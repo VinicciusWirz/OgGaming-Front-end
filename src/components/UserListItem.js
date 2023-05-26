@@ -18,6 +18,8 @@ export default function UserListItem(props) {
         const newArray = [...userInfoRender].map((u) => {
           if (u.id === user.id) {
             return { ...u, is_following: !u.is_following };
+          } else {
+            return { ...u };
           }
         });
         setUserInfoRender(newArray);
@@ -26,6 +28,8 @@ export default function UserListItem(props) {
         const updated = [...userInfoRender].map((u) => {
           if (u.id === user.id) {
             return { ...u, is_following: updatedData.is_following };
+          } else {
+            return { ...u };
           }
         });
         setUserInfoRender(updated);
@@ -56,12 +60,16 @@ export default function UserListItem(props) {
               <span>{user.bio}</span>
             </Desc>
             <ButtonWrapper>
-              <button onClick={followUser} disabled={!session || loading}>
-                {user.is_following ? "Deixar de seguir" : "Seguir"}
-              </button>
-              <FollowNotice>
-                {user.is_follower && "este usuário segue você"}
-              </FollowNotice>
+              {session.username !== user.username && (
+                <>
+                  <button onClick={followUser} disabled={!session || loading}>
+                    {user.is_following ? "Deixar de seguir" : "Seguir"}
+                  </button>
+                  <FollowNotice>
+                    {user.is_follower && "este usuário segue você"}
+                  </FollowNotice>
+                </>
+              )}
             </ButtonWrapper>
           </div>
         </UserInfo>
