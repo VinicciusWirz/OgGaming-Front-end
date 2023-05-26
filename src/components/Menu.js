@@ -17,18 +17,31 @@ export default function Menu() {
   }
   return (
     <MenuStyle>
-      <Link to="/">Home</Link>
-      <Link to="/search">Buscar</Link>
-      <Link to="/followers">Seguidores</Link>
-      <Link to="/following">Seguindo</Link>
-      <Link to="/settings">Configurações</Link>
-      <div onClick={logout}>Logout</div>
+      <div>
+        <Link to="/">Página inicial</Link>
+        <Link to="/search">Buscar</Link>
+        <Link to="/followers">Seguidores</Link>
+        <Link to="/following">Seguindo</Link>
+        <Link to="/settings">Configurações</Link>
+        <div onClick={logout}>Logout</div>
+      </div>
     </MenuStyle>
   );
 }
 
 const MenuStyle = styled.nav`
-  background: red;
   display: flex;
-  flex-direction: column;
+  height: 90vh;
+  position: sticky;
+  padding: 30px;
+  border-right: 1px solid lightGray;
+  div:first-child {
+    height: 50%;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+  }
+  a {
+    text-decoration: none;
+  }
 `;

@@ -89,6 +89,9 @@ const PageContainer = styled.main`
   justify-content: center;
   padding-top: 55px;
   font-size: 22px;
+  * {
+    font-family: "Roboto", sans-serif;
+  }
   div {
     * {
       background: #ffff;
