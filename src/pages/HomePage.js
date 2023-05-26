@@ -5,6 +5,7 @@ import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 import PostItem from "../components/PostItem";
 import { useNavigate } from "react-router-dom";
+import { TailSpin } from "react-loader-spinner";
 
 export default function HomePage() {
   const { session } = useContext(SessionContext);
@@ -12,11 +13,7 @@ export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ image: "", content: "" });
-  const [userInfoRender, setUserInfoRender] = useState({
-    bio: "",
-    followers: 0,
-    following: 0,
-  });
+  const [userInfoRender, setUserInfoRender] = useState(null);
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     if (!session) {
@@ -110,30 +107,53 @@ export default function HomePage() {
       )}
       <Menu />
       <Container>
-        <div>
-          <UserInfo>
-            <img src={session?.image} alt="profile" />
+        {!userInfoRender ? (
+          <article>
+            <TailSpin
+              height="80"
+              width="80"
+              color="#678698"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </article>
+        ) : (
+          <>
             <div>
-              <Desc>
-                <p>
-                  {session?.name}
-                  <span>@{session?.username}</span>
-                </p>
-                <span>{userInfoRender?.bio}</span>
-              </Desc>
-              <ButtonWrapper>
-                <button>Ver seguidores ({userInfoRender.followers})</button>
-                <button>Ver quem eu sigo ({userInfoRender.following})</button>
-              </ButtonWrapper>
+              <UserInfo>
+                <img src={session?.image} alt="profile" />
+                <div>
+                  <Desc>
+                    <p>
+                      {session?.name}
+                      <span>@{session?.username}</span>
+                    </p>
+                    <span>{userInfoRender?.bio}</span>
+                  </Desc>
+                  <ButtonWrapper>
+                    <button onClick={() => navivate("/followers")}>
+                      Ver seguidores ({userInfoRender.followers})
+                    </button>
+                    <button onClick={() => navivate("/following")}>
+                      Ver quem eu sigo ({userInfoRender.following})
+                    </button>
+                  </ButtonWrapper>
+                </div>
+              </UserInfo>
             </div>
-          </UserInfo>
-        </div>
-        <MakeNewPostBTN onClick={makePostModal}>Nova postagem</MakeNewPostBTN>
-        <Posts>
-          {posts.map((p) => (
-            <PostItem key={p.id} post={p} token={session.token} />
-          ))}
-        </Posts>
+            <MakeNewPostBTN onClick={makePostModal}>
+              Nova postagem
+            </MakeNewPostBTN>
+            <Posts>
+              {posts.map((p) => (
+                <PostItem key={p.id} post={p} token={session.token} />
+              ))}
+            </Posts>
+          </>
+        )}
       </Container>
     </PageStyle>
   );
@@ -162,6 +182,11 @@ const Container = styled.div`
       background: #ffff;
     }
     background: #ffff;
+  }
+  article:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 `;
 const UserInfo = styled.div`

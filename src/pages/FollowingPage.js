@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { TailSpin } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import Menu from "../components/Menu";
@@ -10,6 +11,7 @@ export default function FollowingPage() {
   const { session } = useContext(SessionContext);
   const navigate = useNavigate();
   const [userInfoRender, setUserInfoRender] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!session) {
       navigate("/signin");
@@ -22,10 +24,12 @@ export default function FollowingPage() {
     try {
       const { data } = await apiUsers.findFollowing(session.token);
       setUserInfoRender(data);
+      setLoading(false);
     } catch (error) {
       if (error.response.status === 401) {
         alert(`${error.response.status}: Invalid credentials`);
       }
+      setLoading(false);
       console.log(error);
     }
   }
@@ -34,6 +38,20 @@ export default function FollowingPage() {
       <Menu />
       <Container>
         Quem eu sigo
+        {loading && (
+          <article>
+            <TailSpin
+              height="80"
+              width="80"
+              color="#678698"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </article>
+        )}
         {userInfoRender.map((user) => (
           <UserListItem
             key={user.id}

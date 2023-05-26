@@ -1,14 +1,17 @@
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 import apiUsers from "../services/apiUsers";
 
 export default function UserListItem(props) {
   const { session } = useContext(SessionContext);
+  const navigate = useNavigate();
   const { userInfoRender, setUserInfoRender, user } = props;
   const [loading, setLoading] = useState(false);
 
-  async function followUser() {
+  async function followUser(e) {
+    e.stopPropagation();
     if (session) {
       setLoading(true);
       try {
@@ -35,15 +38,18 @@ export default function UserListItem(props) {
       alert("Você precisa estar logado para seguir outros usuários");
     }
   }
+  async function goToUserPage() {
+    navigate(`/${user.username}`);
+  }
 
   return (
     <>
       <div>
         <UserInfo>
-          <img src={user.profile_image} alt="profile" />
+          <img src={user.profile_image} alt="profile" onClick={goToUserPage} />
           <div>
             <Desc>
-              <p>
+              <p onClick={goToUserPage}>
                 {user.name}
                 <span>@{user.username}</span>
               </p>
@@ -78,6 +84,7 @@ const UserInfo = styled.div`
     max-width: 100%;
   }
   img {
+    cursor: pointer;
     object-fit: cover;
     border-radius: 50%;
     width: 100px;
@@ -90,6 +97,7 @@ const Desc = styled.div`
   flex-direction: column;
   gap: 6px;
   p {
+    cursor: pointer;
     font-weight: 700;
     span {
       margin-left: 5px;
