@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 
 export default function Menu() {
-  const { session, setSession } = useContext(SessionContext);
+  const { setSession } = useContext(SessionContext);
   const navivate = useNavigate();
   function logout() {
     const confirmQuestion = "Você tem certeza que quer deslogar?";

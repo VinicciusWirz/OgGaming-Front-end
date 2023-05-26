@@ -3,8 +3,6 @@ import { styled } from "styled-components";
 import Menu from "../components/Menu";
 import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import dayjs from "dayjs";
 import PostItem from "../components/PostItem";
 
 export default function HomePage() {

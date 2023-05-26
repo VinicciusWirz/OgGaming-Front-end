@@ -40,7 +40,9 @@ export default function PostItem(props) {
         <img src={p.poster_profile_pic} alt={`post-op`} />
         {p.name} - <span>@{p.username}</span>
       </div>
-      <img src={p.image} alt={`post-${p.id}`} onDoubleClick={likePostReq} />
+      <PostContent>
+        <img src={p.image} alt={`post-${p.id}`} onDoubleClick={likePostReq} />
+      </PostContent>
       <NavWrapper>
         <nav>
           {likePost ? (
@@ -134,4 +136,27 @@ const NavWrapper = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+`;
+
+const PostContent = styled.article`
+  border-radius: 5px;
+  object-fit: contain;
+  width: 100%;
+  height: 500px;
+  border: 1px solid lightGray;
+  position: relative;
+  img {
+    border: none;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: none;
+    transform: translate(-50%, -50%) scale(1);
+    transition: scale 500ms;
+  }
 `;
