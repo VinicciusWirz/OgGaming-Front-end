@@ -4,9 +4,11 @@ import Menu from "../components/Menu";
 import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 import PostItem from "../components/PostItem";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const { session } = useContext(SessionContext);
+  const navivate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ image: "", content: "" });
@@ -17,7 +19,11 @@ export default function HomePage() {
   });
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    getPosts();
+    if (!session) {
+      navivate("/signin");
+    } else {
+      getPosts();
+    }
   }, []);
   async function getPosts() {
     try {
@@ -106,14 +112,14 @@ export default function HomePage() {
       <Container>
         <div>
           <UserInfo>
-            <img src={session.image} alt="profile" />
+            <img src={session?.image} alt="profile" />
             <div>
               <Desc>
                 <p>
-                  {session.name}
-                  <span>@{session.username}</span>
+                  {session?.name}
+                  <span>@{session?.username}</span>
                 </p>
-                <span>{userInfoRender.bio}</span>
+                <span>{userInfoRender?.bio}</span>
               </Desc>
               <ButtonWrapper>
                 <button>Ver seguidores ({userInfoRender.followers})</button>

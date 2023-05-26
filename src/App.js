@@ -5,6 +5,7 @@ import { SessionProvider } from "./contexts/SessionContext";
 import HomePage from "./pages/HomePage";
 import SigninPage from "./pages/SigninPage";
 import SignupPage from "./pages/SignupPage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
             <Route path="/folowers" element="" />
             <Route path="/folowing" element="" />
             <Route path="/search" element="" />
-            <Route path="/user/:username" element="" />
+            <Route path="/:username" element={<UserPage/>} />
           </Routes>
         </PageStyle>
       </SessionProvider>

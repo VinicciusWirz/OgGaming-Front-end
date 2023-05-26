@@ -1,10 +1,12 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { styled } from "styled-components";
+import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 
 export default function PostItem(props) {
+  const { session } = useContext(SessionContext);
   const { post: p, token } = props;
   const [likePost, setLikePost] = useState(p.user_liked);
   const [likeCount, setLikeCount] = useState(p.likes);
@@ -13,7 +15,7 @@ export default function PostItem(props) {
   async function likePostReq() {
     const newStateLikePost = !likePost;
     const newCount = likePost ? Number(likeCount) - 1 : Number(likeCount) + 1;
-    if (!loading) {
+    if (!loading && session) {
       try {
         setLikePost(newStateLikePost);
         setLikeCount(newCount);
