@@ -16,6 +16,8 @@ import {
   UserSettings,
 } from "../styles/SettingsStyle";
 import UserInfoForm from "../components/UserInfoForm";
+import { inputValidationColors } from "../utils/colors";
+import colorChanging from "../utils/colorChanging";
 
 export default function SettingsPage() {
   const { session, setSession } = useContext(SessionContext);
@@ -29,6 +31,14 @@ export default function SettingsPage() {
     bio: session.bio,
     birthday: session.birthday ? dateYYYYMMDD(session.birthday) : null,
     email: session.email,
+  });
+  const [backgroundColor, setBackgroundColor] = useState({
+    image: inputValidationColors.default,
+    name: inputValidationColors.default,
+    username: inputValidationColors.default,
+    bio: inputValidationColors.default,
+    birthday: inputValidationColors.default,
+    email: inputValidationColors.default,
   });
 
   const [edit, setEdit] = useState(false);
@@ -61,6 +71,14 @@ export default function SettingsPage() {
         birthday: dateYYYYMMDD(session.birthday),
         email: session.email,
       });
+      setBackgroundColor({
+        image: inputValidationColors.default,
+        name: inputValidationColors.default,
+        username: inputValidationColors.default,
+        bio: inputValidationColors.default,
+        birthday: inputValidationColors.default,
+        email: inputValidationColors.default,
+      });
     }
   }
 
@@ -75,6 +93,10 @@ export default function SettingsPage() {
   function handleChange(e) {
     const value = e.target.value;
     setForm({ ...form, [e.target.name]: value });
+    setBackgroundColor({
+      ...backgroundColor,
+      [e.target.name]: inputValidationColors.default,
+    });
   }
 
   function adjustTextareaHeight() {
@@ -99,8 +121,24 @@ export default function SettingsPage() {
         setImageReq(false);
         setEditImage(false);
       } catch (error) {
-        setImageReq(false);
-        console.log(error);
+        if (error.response.status === 422) {
+          error.response.data.forEach((e) => {
+            const id = e.split(" ")[0].replace(/"/g, "");
+            colorChanging(
+              id,
+              setBackgroundColor,
+              backgroundColor,
+              inputValidationColors.error
+            );
+          });
+        } else {
+          const errorId = error.response.data.split(" ")[0];
+          setBackgroundColor({
+            ...backgroundColor,
+            [errorId]: inputValidationColors.error,
+          });
+        }
+        alert(`Status: ${error.response.status} - ${error.response.data}`);
       }
     }
   }
@@ -175,6 +213,8 @@ export default function SettingsPage() {
                     handleChange={handleChange}
                     changeEditMode={changeEditMode}
                     textareaRef={textareaRef}
+                    backgroundColor={backgroundColor}
+                    setBackgroundColor={setBackgroundColor}
                   />
                 )}
               </UserSettings>

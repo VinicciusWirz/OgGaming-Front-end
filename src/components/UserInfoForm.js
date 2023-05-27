@@ -4,12 +4,22 @@ import { TailSpin } from "react-loader-spinner";
 import SessionContext from "../contexts/SessionContext";
 import apiUsers from "../services/apiUsers";
 import { BtnWrapper, ItemForm } from "../styles/SettingsStyle";
+import colorChanging from "../utils/colorChanging";
+import { inputValidationColors } from "../utils/colors";
 import { dateDDMMYYYY } from "../utils/convertDate";
 
 export default function UserInfoForm(props) {
   const { session, setSession } = useContext(SessionContext);
   const [loading, setLoading] = useState(false);
-  const { form, handleChange, changeEditMode, textareaRef } = props;
+  const {
+    form,
+    handleChange,
+    changeEditMode,
+    textareaRef,
+    backgroundColor,
+    setBackgroundColor,
+  } = props;
+
   function handleTextareaChange(e) {
     adjustTextareaHeight();
     handleChange(e);
@@ -32,29 +42,44 @@ export default function UserInfoForm(props) {
       email: form.email,
     };
     try {
-      const res = await apiUsers.editUserInfo(session.token, body);
-      console.log(res);
-      body.birthday = dateDDMMYYYY(form.birthday);
+      await apiUsers.editUserInfo(session.token, body);
+      body.birthday = body.birthday ? dateDDMMYYYY(form.birthday) : null;
       const updatedSession = {
         image: session.image,
         token: session.token,
         ...body,
       };
-      console.log(updatedSession);
       setSession(updatedSession);
       localStorage.setItem("session", JSON.stringify(updatedSession));
       setLoading(false);
       changeEditMode();
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      if (error.response.status === 422) {
+        error.response.data.forEach((e) => {
+          const id = e.split(" ")[0].replace(/"/g, "");
+          colorChanging(
+            id,
+            setBackgroundColor,
+            backgroundColor,
+            inputValidationColors.error
+          );
+        });
+      } else {
+        const errorId = error.response.data.split(" ")[0];
+        setBackgroundColor({
+          ...backgroundColor,
+          [errorId]: inputValidationColors.error,
+        });
+      }
+      alert(`Status: ${error.response.status} - ${error.response.data}`);
     }
   }
 
   return (
     <>
       <form onSubmit={submitUpdateInfo}>
-        <ItemForm>
+        <ItemForm backgroundcolor={backgroundColor.name}>
           <label>
             Nome:
             <div>
@@ -69,9 +94,9 @@ export default function UserInfoForm(props) {
             </div>
           </label>
         </ItemForm>
-        <ItemForm>
+        <ItemForm backgroundcolor={backgroundColor.username}>
           <label>
-            Userame:
+            Username:
             <div>
               <input
                 required
@@ -80,18 +105,18 @@ export default function UserInfoForm(props) {
                 name="username"
                 value={form.username}
                 onChange={handleChange}
+                minLength={6}
                 maxLength={11}
                 disabled={loading}
               />
             </div>
           </label>
         </ItemForm>
-        <ItemForm>
+        <ItemForm backgroundcolor={backgroundColor.birthday}>
           <label>
             Aniversário:
             <div>
               <input
-                required
                 placeholder="Seu aniversário"
                 type="date"
                 name="birthday"
@@ -102,7 +127,7 @@ export default function UserInfoForm(props) {
             </div>
           </label>
         </ItemForm>
-        <ItemForm>
+        <ItemForm backgroundcolor={backgroundColor.email}>
           <label>
             Email:
             <div>
@@ -118,7 +143,7 @@ export default function UserInfoForm(props) {
             </div>
           </label>
         </ItemForm>
-        <ItemForm>
+        <ItemForm backgroundcolor={backgroundColor.bio}>
           <label>
             Bio:
             <div>

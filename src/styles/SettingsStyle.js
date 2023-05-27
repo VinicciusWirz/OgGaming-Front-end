@@ -55,10 +55,11 @@ export const ImageContainer = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 11px;
+    width: 100%;
     div {
       display: flex;
-      justify-content: center;
-      gap: 11px;
+      justify-content: space-around;
+      width: 100%;
     }
     button {
       border-radius: 50%;
@@ -136,7 +137,6 @@ export const UserSettings = styled.div`
 
 export const ItemForm = styled.div`
   display: flex;
-  background: red;
   max-width: 100%;
 
   label {
@@ -162,7 +162,8 @@ export const ItemForm = styled.div`
       padding: 10px;
       border-radius: 5px;
       border: 1px solid lightGray;
-      background: #f7f6f5;
+      background: ${(props) =>
+        props.backgroundcolor ? props.backgroundcolor : "#f7f6f5"};
       &:focus {
         outline: none !important;
       }
@@ -186,7 +187,6 @@ export const BtnWrapper = styled.div`
   justify-content: center;
   gap: 5%;
   button {
-    /* background: #a4b6c1; */
     padding: 10px 20px;
     border: none;
     border-radius: 7px;

@@ -18,7 +18,7 @@ export default function UserInfoStatic(props) {
         </ItemForm>
         <ItemForm>
           <label>
-            Userame:
+            Username:
             <div>
               <span>{session.username}</span>
             </div>
