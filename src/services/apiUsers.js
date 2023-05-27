@@ -19,5 +19,21 @@ function findQuery(token, name) {
   return axios.get(`${url}/search/${name}`, headerGen(token));
 }
 
-const apiUsers = { followUser, findFollowers, findFollowing, findQuery };
+function editUserPfp(token, body) {
+  return axios.put(`${url}/me/pfp`, body, headerGen(token));
+}
+
+function editUserInfo(token, body) {
+  return axios.put(`${url}/me`, body, headerGen(token));
+}
+
+
+const apiUsers = {
+  followUser,
+  findFollowers,
+  findFollowing,
+  findQuery,
+  editUserPfp,
+  editUserInfo,
+};
 export default apiUsers;

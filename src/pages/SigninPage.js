@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
@@ -8,11 +9,11 @@ export default function SigninPage() {
   const { session, setSession } = useContext(SessionContext);
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const navivate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (session) {
-      navivate("/");
+      navigate("/");
     }
   }, []);
   function handleChange(e) {
@@ -24,11 +25,17 @@ export default function SigninPage() {
     setLoading(true);
     try {
       const { data } = await apiAuth.signin(form);
-      setSession(data);
-      const localData = JSON.stringify(data);
+      const dataFormated = {
+        ...data,
+        birthday: data.birthday
+          ? dayjs(data.birthday).format("DD/MM/YYYY")
+          : null,
+      };
+      setSession(dataFormated);
+      const localData = JSON.stringify(dataFormated);
       localStorage.setItem("session", localData);
       setLoading(false);
-      navivate("/");
+      navigate("/");
     } catch (error) {
       setLoading(false);
       if (error.response.status === 404 || error.response.status === 401) {
@@ -76,7 +83,7 @@ export default function SigninPage() {
           </button>
         </form>
         <div>
-          Ainda não possui uma conta?
+          <p>Ainda não possui uma conta?</p>
           <Link to="/signup">Cadastre-se</Link>
         </div>
       </div>
@@ -107,6 +114,13 @@ const PageContainer = styled.main`
   div:nth-child(2) {
     font-size: 16px;
     background: none;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    a, p {
+      text-align: center;
+      background: none;
+    }
   }
   form {
     font-size: 14px;

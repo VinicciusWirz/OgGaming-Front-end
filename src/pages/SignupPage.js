@@ -15,11 +15,11 @@ export default function SignupPage() {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
-  const navivate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (session) {
-      navivate("/");
+      navigate("/");
     }
   }, []);
   function handleChange(e) {
@@ -35,7 +35,7 @@ export default function SignupPage() {
     try {
       await apiAuth.signup(form);
       setLoading(false);
-      navivate("/signin");
+      navigate("/signin");
     } catch (error) {
       setLoading(false);
       if (error.response.status === 409) {
@@ -166,6 +166,13 @@ const PageContainer = styled.main`
   div:nth-child(2) {
     font-size: 16px;
     background: none;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    a, p {
+      text-align: center;
+      background: none;
+    }
   }
   form {
     font-size: 14px;

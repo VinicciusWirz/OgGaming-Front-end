@@ -16,13 +16,13 @@ import SessionContext from "../contexts/SessionContext";
 export default function Menu() {
   const { setSession } = useContext(SessionContext);
   const location = useLocation();
-  const navivate = useNavigate();
+  const navigate = useNavigate();
   function logout() {
     const confirmQuestion = "Você tem certeza que quer deslogar?";
     if (window.confirm(confirmQuestion)) {
       localStorage.clear();
       setSession(null);
-      navivate("/signin");
+      navigate("/signin");
       return;
     }
   }
@@ -80,7 +80,7 @@ export default function Menu() {
 
 const MenuStyle = styled.nav`
   display: flex;
-  height: 90vh;
+  height: calc(98vh - 65px - 30px);
   position: sticky;
   padding: 30px;
   border-right: 1px solid lightGray;
@@ -100,5 +100,6 @@ const MenuStyle = styled.nav`
     display: flex;
     gap: 3px;
     align-items: center;
+    cursor: pointer;
   }
 `;

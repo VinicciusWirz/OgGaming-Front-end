@@ -4,6 +4,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
+import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 
 export default function PostItem(props) {
   const { session } = useContext(SessionContext);
@@ -39,7 +40,11 @@ export default function PostItem(props) {
   return (
     <PostItemStyle key={p.id}>
       <div>
-        <img src={p.poster_profile_pic} alt={`post-op`} />
+        <img
+          src={p.poster_profile_pic}
+          alt={`post-op`}
+          onError={(e) => (e.target.src = defaultUserImage)}
+        />
         {p.name} - <span>@{p.username}</span>
       </div>
       <PostContent>

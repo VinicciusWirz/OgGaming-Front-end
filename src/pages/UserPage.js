@@ -7,6 +7,7 @@ import PostItem from "../components/PostItem";
 import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 import apiUsers from "../services/apiUsers";
+import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 
 export default function UserPage() {
   const { session } = useContext(SessionContext);
@@ -14,7 +15,6 @@ export default function UserPage() {
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const username = params.username;
-
   useEffect(() => {
     fetchPostList();
   }, []);
@@ -67,7 +67,11 @@ export default function UserPage() {
           <>
             <div>
               <UserInfo>
-                <img src={userInfoRender.profile_image} alt="profile" />
+                <img
+                  src={userInfoRender.profile_image}
+                  alt="profile"
+                  onError={(e) => (e.target.src = defaultUserImage)}
+                />
                 <div>
                   <Desc>
                     <p>
@@ -77,11 +81,16 @@ export default function UserPage() {
                     <span>{userInfoRender.bio}</span>
                   </Desc>
                   <ButtonWrapper>
-                    <button onClick={followUser} disabled={!session || loading}>
-                      {userInfoRender.is_following
-                        ? "Deixar de seguir"
-                        : "Seguir"}
-                    </button>
+                    {userInfoRender.username !== session.username && (
+                      <button
+                        onClick={followUser}
+                        disabled={!session || loading}
+                      >
+                        {userInfoRender.is_following
+                          ? "Deixar de seguir"
+                          : "Seguir"}
+                      </button>
+                    )}
                     <FollowNotice>
                       {userInfoRender.is_follower && "este usuário segue você"}
                     </FollowNotice>

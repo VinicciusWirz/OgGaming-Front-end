@@ -3,6 +3,7 @@ import { BsJoystick } from "react-icons/bs";
 import SessionContext from "../contexts/SessionContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 
 export default function Header() {
   const { session } = useContext(SessionContext);
@@ -18,7 +19,11 @@ export default function Header() {
         {session && (
           <NavStyle>
             <div>
-              <img src={session.image} alt="profile" />
+              <img
+                src={session.image}
+                alt="profile"
+                onError={(e) => (e.target.src = defaultUserImage)}
+              />
             </div>
             <div>
               <p>{session.name}</p>

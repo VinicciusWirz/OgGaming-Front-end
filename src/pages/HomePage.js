@@ -6,10 +6,11 @@ import apiPosts from "../services/apiPosts";
 import PostItem from "../components/PostItem";
 import { useNavigate } from "react-router-dom";
 import { TailSpin } from "react-loader-spinner";
+import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 
 export default function HomePage() {
   const { session } = useContext(SessionContext);
-  const navivate = useNavigate();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ image: "", content: "" });
@@ -18,7 +19,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!session) {
-      navivate("/signin");
+      navigate("/signin");
     } else {
       getPosts();
     }
@@ -128,7 +129,11 @@ export default function HomePage() {
           <>
             <div>
               <UserInfo>
-                <img src={session?.image} alt="profile" />
+                <img
+                  src={session?.image}
+                  alt="profile"
+                  onError={(e) => (e.target.src = defaultUserImage)}
+                />
                 <div>
                   <Desc>
                     <p>
@@ -138,10 +143,10 @@ export default function HomePage() {
                     <span>{userInfoRender?.bio}</span>
                   </Desc>
                   <ButtonWrapper>
-                    <button onClick={() => navivate("/followers")}>
+                    <button onClick={() => navigate("/followers")}>
                       Ver seguidores ({userInfoRender.followers})
                     </button>
-                    <button onClick={() => navivate("/following")}>
+                    <button onClick={() => navigate("/following")}>
                       Ver quem eu sigo ({userInfoRender.following})
                     </button>
                   </ButtonWrapper>

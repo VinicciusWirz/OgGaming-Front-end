@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 import apiUsers from "../services/apiUsers";
+import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 
 export default function UserListItem(props) {
   const { session } = useContext(SessionContext);
@@ -50,7 +51,11 @@ export default function UserListItem(props) {
     <>
       <div onClick={goToUserPage}>
         <UserInfo>
-          <img src={user.profile_image} alt="profile" />
+          <img
+            src={user.profile_image}
+            alt="profile"
+            onError={(e) => (e.target.src = defaultUserImage)}
+          />
           <div>
             <Desc>
               <p>
