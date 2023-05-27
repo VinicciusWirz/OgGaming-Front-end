@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import Menu from "../components/Menu";
 import PostItem from "../components/PostItem";
@@ -14,8 +14,12 @@ export default function UserPage() {
   const [userInfoRender, setUserInfoRender] = useState();
   const [loading, setLoading] = useState(false);
   const params = useParams();
+  const navigate = useNavigate();
   const username = params.username;
   useEffect(() => {
+    if (!session) {
+      navigate("/signin");
+    }
     fetchPostList();
   }, []);
 
