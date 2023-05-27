@@ -43,6 +43,9 @@ export default function HomePage() {
   async function makePostModal(e) {
     e?.stopPropagation();
     setShowModal(!showModal);
+    if (showModal) {
+      setForm({ image: "", content: "" });
+    }
   }
 
   function handleChange(e) {
@@ -74,13 +77,12 @@ export default function HomePage() {
       makePostModal();
     } catch (error) {
       setLoading(false);
-      console.log(error);
-      // if (error.response.status === 401) {
-      //   alert(`${error.response.status}: Invalid credentials`);
-      // }
-      // if (error.response.status === 422) {
-      //   alert(`${error.response.status}: ${error.response.data}`);
-      // }
+      if (error.response.status === 401) {
+        alert(`${error.response.status}: Invalid credentials`);
+      }
+      if (error.response.status === 422) {
+        alert(`${error.response.status}: ${error.response.data}`);
+      }
     }
   }
 
