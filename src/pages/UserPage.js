@@ -19,8 +19,9 @@ export default function UserPage() {
   useEffect(() => {
     if (!session) {
       navigate("/signin");
+    } else {
+      fetchPostList();
     }
-    fetchPostList();
   }, []);
 
   async function fetchPostList() {
