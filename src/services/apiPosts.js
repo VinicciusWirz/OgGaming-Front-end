@@ -16,12 +16,18 @@ function likePost(token, id) {
 }
 
 function getUserPosts(username, token) {
-  if (token) {
-    return axios.get(`${url}/user/${username}`, headerGen(token));
-  } else {
-    return axios.get(`${url}/user/${username}`);
-  }
+  return axios.get(`${url}/user/${username}`, headerGen(token));
 }
 
-const apiPosts = { getSelfPosts, createPost, likePost, getUserPosts };
+function deletePost(token, id) {
+  return axios.delete(`${url}/delete/${id}`, headerGen(token));
+}
+
+const apiPosts = {
+  getSelfPosts,
+  createPost,
+  likePost,
+  getUserPosts,
+  deletePost,
+};
 export default apiPosts;

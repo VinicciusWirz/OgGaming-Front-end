@@ -105,7 +105,12 @@ export default function UserPage() {
             </div>
             <Posts>
               {userInfoRender.posts.map((p) => (
-                <PostItem key={p.id} post={p} token={session.token} />
+                <PostItem
+                  key={p.id}
+                  post={p}
+                  userInfoRender={userInfoRender}
+                  setUserInfoRender={setUserInfoRender}
+                />
               ))}
             </Posts>
           </>

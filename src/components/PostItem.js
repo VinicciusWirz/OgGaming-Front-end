@@ -5,10 +5,11 @@ import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
+import { BsTrash3 } from "react-icons/bs";
 
 export default function PostItem(props) {
   const { session } = useContext(SessionContext);
-  const { post: p, token } = props;
+  const { post: p, setUserInfoRender, userInfoRender } = props;
   const [likePost, setLikePost] = useState(p.user_liked);
   const [likeCount, setLikeCount] = useState(p.likes);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export default function PostItem(props) {
         setLikePost(newStateLikePost);
         setLikeCount(newCount);
         setLoading(true);
-        const { data } = await apiPosts.likePost(token, p.id);
+        const { data } = await apiPosts.likePost(session.token, p.id);
         setLikeCount(Number(data.like_count));
         setLikePost(data.user_liked);
         setLoading(false);
@@ -37,16 +38,41 @@ export default function PostItem(props) {
     }
   }
 
+  async function deletePost() {
+    if (!loading) {
+      const confirmQuestion = "Você tem certeza que quer deletar este post?";
+      if (window.confirm(confirmQuestion)) {
+        setLoading(true);
+        try {
+          await apiPosts.deletePost(session.token, p.id);
+          setLoading(false);
+          const filterArray = [...userInfoRender.posts].filter(
+            (e) => e.id !== p.id
+          );
+          setUserInfoRender({ ...userInfoRender, posts: filterArray });
+        } catch (error) {
+          setLoading(false);
+          if (error.response.status === 401) {
+            alert(`${error.response.status}: Invalid credentials`);
+          }
+        }
+      }
+    }
+  }
+
   return (
     <PostItemStyle key={p.id}>
-      <div>
-        <img
-          src={p.poster_profile_pic}
-          alt={`post-op`}
-          onError={(e) => (e.target.src = defaultUserImage)}
-        />
-        {p.name} - <span>@{p.username}</span>
-      </div>
+      <PostHeader>
+        <div>
+          <img
+            src={p.poster_profile_pic}
+            alt={`post-op`}
+            onError={(e) => (e.target.src = defaultUserImage)}
+          />
+          {p.name} - <span>@{p.username}</span>
+        </div>
+        {p.username === session.username && <BsTrash3 onClick={deletePost} />}
+      </PostHeader>
       <PostContent>
         <img src={p.image} alt={`post-${p.id}`} onDoubleClick={likePostReq} />
       </PostContent>
@@ -165,5 +191,17 @@ const PostContent = styled.article`
     background: none;
     transform: translate(-50%, -50%) scale(1);
     transition: scale 500ms;
+  }
+`;
+
+const PostHeader = styled.div`
+  justify-content: space-between;
+  > div {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  svg:last-child {
+    cursor: pointer;
   }
 `;

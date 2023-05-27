@@ -15,7 +15,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ image: "", content: "" });
   const [userInfoRender, setUserInfoRender] = useState(null);
-  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     if (!session) {
@@ -32,8 +31,8 @@ export default function HomePage() {
         bio: data.bio,
         followers: data.followers,
         following: data.following,
+        posts: data.posts,
       });
-      setPosts(data.posts);
     } catch (error) {
       if (error.response.status === 401) {
         alert(`${error.response.status}: Invalid credentials`);
@@ -42,7 +41,7 @@ export default function HomePage() {
   }
 
   async function makePostModal(e) {
-    e.stopPropagation();
+    e?.stopPropagation();
     setShowModal(!showModal);
   }
 
@@ -54,16 +53,34 @@ export default function HomePage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await apiPosts.createPost(form, session.token);
+      const { data } = await apiPosts.createPost(form, session.token);
+      const newPost = {
+        id: data.id,
+        created_at: data.created_at,
+        likes: 0,
+        user_liked: false,
+        username: session.username,
+        name: session.name,
+        image: form.image,
+        content: data.content,
+        poster_profile_pic: session.image,
+      };
+      const newPostArr = [newPost, ...userInfoRender.posts];
+      setUserInfoRender({
+        ...userInfoRender,
+        posts: newPostArr,
+      });
       setLoading(false);
+      makePostModal();
     } catch (error) {
       setLoading(false);
-      if (error.response.status === 401) {
-        alert(`${error.response.status}: Invalid credentials`);
-      }
-      if (error.response.status === 422) {
-        alert(`${error.response.status}: ${error.response.data}`);
-      }
+      console.log(error);
+      // if (error.response.status === 401) {
+      //   alert(`${error.response.status}: Invalid credentials`);
+      // }
+      // if (error.response.status === 422) {
+      //   alert(`${error.response.status}: ${error.response.data}`);
+      // }
     }
   }
 
@@ -157,8 +174,13 @@ export default function HomePage() {
               Nova postagem
             </MakeNewPostBTN>
             <Posts>
-              {posts.map((p) => (
-                <PostItem key={p.id} post={p} token={session.token} />
+              {userInfoRender.posts.map((p) => (
+                <PostItem
+                  key={p.id}
+                  post={p}
+                  userInfoRender={userInfoRender}
+                  setUserInfoRender={setUserInfoRender}
+                />
               ))}
             </Posts>
           </>
