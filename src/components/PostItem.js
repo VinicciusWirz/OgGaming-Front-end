@@ -88,6 +88,7 @@ export default function PostItem(props) {
             <AiFillHeart
               size={17}
               cursor="pointer"
+              style={{ marginRight: "5px" }}
               color="rgb(250,0,0)"
               onClick={likePostReq}
             />

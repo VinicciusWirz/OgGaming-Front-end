@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
 import apiUsers from "../services/apiUsers";
 import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
+import { TailSpin } from "react-loader-spinner";
 
 export default function UserListItem(props) {
   const { session } = useContext(SessionContext);
-  const navigate = useNavigate();
   const { userInfoRender, setUserInfoRender, user } = props;
   const [loading, setLoading] = useState(false);
 
@@ -43,32 +43,50 @@ export default function UserListItem(props) {
       alert("Você precisa estar logado para seguir outros usuários");
     }
   }
-  async function goToUserPage() {
-    navigate(`/${user.username}`);
-  }
 
   return (
     <>
-      <div onClick={goToUserPage}>
+      <div>
         <UserInfo>
-          <img
-            src={user.profile_image}
-            alt="profile"
-            onError={(e) => (e.target.src = defaultUserImage)}
-          />
+          <Link to={`/${user.username}`}>
+            <img
+              src={user.profile_image}
+              alt="profile"
+              onError={(e) => (e.target.src = defaultUserImage)}
+            />
+          </Link>
           <div>
             <Desc>
-              <p>
-                {user.name}
-                <span>@{user.username}</span>
-              </p>
-              <span>{user.bio}</span>
+              <Link to={`/${user.username}`}>
+                <p>
+                  {user.name}
+                  <span>@{user.username}</span>
+                </p>
+                <span>{user.bio}</span>
+              </Link>
             </Desc>
             <ButtonWrapper>
               {session.username !== user.username && (
                 <>
                   <button onClick={followUser} disabled={!session || loading}>
-                    {user.is_following ? "Deixar de seguir" : "Seguir"}
+                    {loading ? (
+                      <>
+                        <TailSpin
+                          height="20"
+                          width="40"
+                          color="#fafafa"
+                          ariaLabel="tail-spin-loading"
+                          radius="1"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                          visible={true}
+                        />
+                      </>
+                    ) : user.is_following ? (
+                      "Deixar de seguir"
+                    ) : (
+                      "Seguir"
+                    )}
                   </button>
                   <FollowNotice>
                     {user.is_follower && "este usuário segue você"}
@@ -96,7 +114,8 @@ const UserInfo = styled.div`
     gap: 7px;
     max-width: 100%;
   }
-  img {
+  img,
+  > a {
     cursor: pointer;
     object-fit: cover;
     border-radius: 50%;
@@ -106,24 +125,27 @@ const UserInfo = styled.div`
 `;
 
 const Desc = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  p {
-    cursor: pointer;
-    font-weight: 700;
-    span {
-      margin-left: 5px;
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    p {
+      cursor: pointer;
+      font-weight: 700;
+      span {
+        margin-left: 5px;
+        font-weight: 300;
+        font-size: 14px;
+      }
+    }
+    > span {
       font-weight: 300;
       font-size: 14px;
+      display: block;
+      height: 40px;
+      overflow-wrap: break-word;
     }
-  }
-  > span {
-    font-weight: 300;
-    font-size: 14px;
-    display: block;
-    height: 50px;
-    overflow-wrap: break-word;
   }
 `;
 
@@ -141,5 +163,12 @@ const ButtonWrapper = styled.div`
     background: #a4b6c1 !important;
     padding: 10px;
     border-radius: 9px;
+    div {
+      width: 100%;
+      background: transparent;
+      svg {
+        background: transparent;
+      }
+    }
   }
 `;

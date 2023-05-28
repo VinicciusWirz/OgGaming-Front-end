@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TailSpin } from "react-loader-spinner";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import Menu from "../components/Menu";
 import UserListItem from "../components/UserListItem";
@@ -13,10 +13,10 @@ export default function SearchPage() {
   const navigate = useNavigate();
   const [userInfoRender, setUserInfoRender] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name: "" });
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const nameSearch = searchParams.get("name");
+  const [form, setForm] = useState({ name: nameSearch ? nameSearch : "" });
   useEffect(() => {
     if (!session) {
       navigate("/signin");
@@ -31,17 +31,19 @@ export default function SearchPage() {
   }
 
   async function handleSearch() {
-    setLoading(true);
-    try {
-      const res = await apiUsers.findQuery(session.token, nameSearch);
-      setUserInfoRender(res.data);
-      setLoading(false);
-    } catch (error) {
-      if (error.response.status === 401) {
-        alert(`${error.response.status}: Invalid credentials`);
+    if (!loading) {
+      setLoading(true);
+      try {
+        const res = await apiUsers.findQuery(session.token, nameSearch);
+        setUserInfoRender(res.data);
+        setLoading(false);
+      } catch (error) {
+        if (error.response.status === 401) {
+          alert(`${error.response.status}: Invalid credentials`);
+        }
+        setLoading(false);
+        console.log(error);
       }
-      setLoading(false);
-      console.log(error);
     }
   }
 
@@ -61,6 +63,7 @@ export default function SearchPage() {
             onKeyUp={handleKeyPress}
             onChange={(e) => setForm({ name: e.target.value })}
             value={form.name}
+            disabled={loading}
           />
           <HiMagnifyingGlass size={22} onClick={handleSubmit} />
         </ResearchArea>
@@ -105,6 +108,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  margin-bottom: 32px;
   > div {
     width: 70%;
     padding: 25px 15px;
@@ -125,7 +129,7 @@ const ResearchArea = styled.article`
     padding: 10px;
     border-radius: 5px;
     border: 1px solid lightGray;
-    background: #f7f6f5;
+    background: #ffff;
     &:focus {
       outline: none !important;
     }
@@ -138,7 +142,7 @@ const ResearchArea = styled.article`
     top: 50%;
     right: 0%;
     transform: translate(-50%, -50%);
-    background: #f7f6f5;
+    background: transparent;
     cursor: pointer;
   }
 `;
