@@ -52,7 +52,7 @@ export default function UserInfoForm(props) {
       setSession(updatedSession);
       localStorage.setItem("session", JSON.stringify(updatedSession));
       setLoading(false);
-      changeEditMode();
+      changeEditMode(body);
     } catch (error) {
       setLoading(false);
       if (error.response.status === 422) {

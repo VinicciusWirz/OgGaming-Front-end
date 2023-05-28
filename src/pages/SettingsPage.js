@@ -57,20 +57,28 @@ export default function SettingsPage() {
     }
   }, [edit]);
 
-  function changeEditMode() {
+  function changeEditMode(updatedForm) {
     if (!edit) {
       setEdit(true);
       adjustTextareaHeight();
     } else {
       setEdit(false);
-      setForm({
-        image: form.image,
-        name: session.name,
-        username: session.username,
-        bio: session.bio,
-        birthday: dateYYYYMMDD(session.birthday),
-        email: session.email,
-      });
+      if (updatedForm.username) {
+        updatedForm.birthday = dateYYYYMMDD(updatedForm.birthday);
+        setForm({
+          image: form.image,
+          ...updatedForm,
+        });
+      } else {
+        setForm({
+          image: form.image,
+          name: session.name,
+          username: session.username,
+          bio: session.bio,
+          birthday: dateYYYYMMDD(session.birthday),
+          email: session.email,
+        });
+      }
       setBackgroundColor({
         image: inputValidationColors.default,
         name: inputValidationColors.default,
