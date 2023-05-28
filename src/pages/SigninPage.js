@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
+import { TailSpin } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import SessionContext from "../contexts/SessionContext";
@@ -79,7 +80,22 @@ export default function SigninPage() {
             />
           </label>
           <button type="submit" disabled={loading}>
-            Entrar
+            {loading ? (
+              <div>
+                <TailSpin
+                  height="24"
+                  width="50"
+                  color="#fafafa"
+                  ariaLabel="tail-spin-loading"
+                  radius="1"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              </div>
+            ) : (
+              "Entrar"
+            )}
           </button>
         </form>
         <div>
@@ -117,7 +133,8 @@ const PageContainer = styled.main`
     display: flex;
     align-items: center;
     flex-direction: column;
-    a, p {
+    a,
+    p {
       text-align: center;
       background: none;
     }
@@ -151,6 +168,7 @@ const PageContainer = styled.main`
       }
     }
     button {
+      font-size: 16px;
       background: #a4b6c1;
       padding: 17px 31px;
       border: none;
@@ -158,6 +176,14 @@ const PageContainer = styled.main`
       cursor: pointer;
       &:disabled {
         background: #98a8b3;
+      }
+      div {
+        background: none;
+        width: 100%;
+        display: flex;
+        svg {
+          background: none;
+        }
       }
     }
   }

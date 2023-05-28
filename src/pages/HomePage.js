@@ -290,6 +290,7 @@ const Posts = styled.ul`
   flex-direction: column;
   gap: 20px;
   width: 50%;
+  margin-bottom: 50px;
 `;
 
 const NewPostModal = styled.div`

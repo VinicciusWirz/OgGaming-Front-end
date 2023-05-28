@@ -28,6 +28,7 @@ export default function UserPage() {
     try {
       const { data } = await apiPosts.getUserPosts(username, session.token);
       setUserInfoRender(data);
+      console.log(data)
     } catch (error) {
       console.log(error);
     }
@@ -209,6 +210,7 @@ const Posts = styled.ul`
   flex-direction: column;
   gap: 20px;
   width: 50%;
+  margin-bottom: 50px;
 `;
 
 const FollowNotice = styled.span`

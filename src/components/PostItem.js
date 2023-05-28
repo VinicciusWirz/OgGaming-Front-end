@@ -6,6 +6,7 @@ import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 import { BsTrash3 } from "react-icons/bs";
+import errorLoadingImagePost from "../assets/images/error404.png";
 
 export default function PostItem(props) {
   const { session } = useContext(SessionContext);
@@ -74,7 +75,12 @@ export default function PostItem(props) {
         {p.username === session.username && <BsTrash3 onClick={deletePost} />}
       </PostHeader>
       <PostContent>
-        <img src={p.image} alt={`post-${p.id}`} onDoubleClick={likePostReq} />
+        <img
+          src={p.image}
+          alt={`post-${p.id}`}
+          onDoubleClick={likePostReq}
+          onError={(e) => (e.target.src = errorLoadingImagePost)}
+        />
       </PostContent>
       <NavWrapper>
         <nav>

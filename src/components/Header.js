@@ -81,6 +81,7 @@ const NavStyle = styled.section`
     justify-content: center;
     gap: 2px;
     p {
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 16px;
