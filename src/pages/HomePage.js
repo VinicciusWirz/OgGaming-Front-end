@@ -4,7 +4,7 @@ import Menu from "../components/Menu";
 import SessionContext from "../contexts/SessionContext";
 import apiPosts from "../services/apiPosts";
 import PostItem from "../components/PostItem";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TailSpin } from "react-loader-spinner";
 import defaultUserImage from "../assets/images/EEUy6MCU0AErfve.png";
 
@@ -162,11 +162,15 @@ export default function HomePage() {
                     <span>{userInfoRender?.bio}</span>
                   </Desc>
                   <ButtonWrapper>
-                    <button onClick={() => navigate("/followers")}>
-                      Ver seguidores ({userInfoRender.followers})
+                    <button>
+                      <Link to={"/followers"}>
+                        Ver seguidores ({userInfoRender.followers})
+                      </Link>
                     </button>
-                    <button onClick={() => navigate("/following")}>
-                      Ver quem eu sigo ({userInfoRender.following})
+                    <button>
+                      <Link to={"/following"}>
+                        Ver quem eu sigo ({userInfoRender.following})
+                      </Link>
                     </button>
                   </ButtonWrapper>
                 </div>
@@ -252,6 +256,10 @@ const ButtonWrapper = styled.div`
     background: #a4b6c1;
     padding: 10px;
     border-radius: 9px;
+    a {
+      text-decoration: none;
+      background: transparent;
+    }
   }
 `;
 
@@ -283,6 +291,9 @@ const MakeNewPostBTN = styled.button`
   border: none;
   border-radius: 16px;
   padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.7px;
   cursor: pointer;
 `;
 const Posts = styled.ul`
