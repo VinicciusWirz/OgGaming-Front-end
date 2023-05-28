@@ -42,17 +42,26 @@ export default function UserInfoForm(props) {
       email: form.email,
     };
     try {
-      await apiUsers.editUserInfo(session.token, body);
-      body.birthday = body.birthday ? dateDDMMYYYY(form.birthday) : null;
+      const { data } = await apiUsers.editUserInfo(session.token, body);
+
+      const newBody = {
+        ...data,
+      };
+
+      newBody.birthday = newBody.birthday
+        ? dateDDMMYYYY(newBody.birthday)
+        : null;
+
       const updatedSession = {
         image: session.image,
         token: session.token,
-        ...body,
+        ...newBody,
       };
+
       setSession(updatedSession);
       localStorage.setItem("session", JSON.stringify(updatedSession));
       setLoading(false);
-      changeEditMode(body);
+      changeEditMode(newBody);
     } catch (error) {
       setLoading(false);
       if (error.response.status === 422) {
