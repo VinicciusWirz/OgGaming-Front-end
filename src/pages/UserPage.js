@@ -28,7 +28,6 @@ export default function UserPage() {
     try {
       const { data } = await apiPosts.getUserPosts(username, session.token);
       setUserInfoRender(data);
-      console.log(data)
     } catch (error) {
       console.log(error);
     }

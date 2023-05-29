@@ -14,6 +14,7 @@ export default function PostItem(props) {
   const [likePost, setLikePost] = useState(p.user_liked);
   const [likeCount, setLikeCount] = useState(p.likes);
   const [loading, setLoading] = useState(false);
+  const [showFullImage, setShowFullImage] = useState(false);
 
   async function likePostReq() {
     const newStateLikePost = !likePost;
@@ -62,57 +63,68 @@ export default function PostItem(props) {
   }
 
   return (
-    <PostItemStyle key={p.id}>
-      <PostHeader>
-        <div>
+    <>
+      {showFullImage && (
+        <BigImageContainer onClick={() => setShowFullImage(!showFullImage)}>
           <img
-            src={p.poster_profile_pic}
-            alt={`post-op`}
-            onError={(e) => (e.target.src = defaultUserImage)}
+            src={p.image}
+            alt={`post-${p.id}`}
+            onError={(e) => (e.target.src = errorLoadingImagePost)}
           />
-          {p.name} - <span>@{p.username}</span>
-        </div>
-        {p.username === session.username && <BsTrash3 onClick={deletePost} />}
-      </PostHeader>
-      <PostContent>
-        <img
-          src={p.image}
-          alt={`post-${p.id}`}
-          onDoubleClick={likePostReq}
-          onError={(e) => (e.target.src = errorLoadingImagePost)}
-        />
-      </PostContent>
-      <NavWrapper>
-        <nav>
-          {likePost ? (
-            <AiFillHeart
-              size={17}
-              cursor="pointer"
-              style={{ marginRight: "5px" }}
-              color="rgb(250,0,0)"
-              onClick={likePostReq}
+        </BigImageContainer>
+      )}
+      <PostItemStyle key={p.id}>
+        <PostHeader>
+          <div>
+            <img
+              src={p.poster_profile_pic}
+              alt={`post-op`}
+              onError={(e) => (e.target.src = defaultUserImage)}
             />
-          ) : (
-            <AiOutlineHeart
-              size={17}
-              cursor="pointer"
-              style={{ marginRight: "5px" }}
-              onClick={likePostReq}
-            />
-          )}{" "}
-          {likeCount > 0 && likeCount}{" "}
-          {likeCount > 1
-            ? "Pessoas gostaram deste post!"
-            : likeCount === 1
-            ? "Pessoa gostou deste post!"
-            : "Ninguem gostou deste post ainda"}
-        </nav>
-        <div>{dayjs(p.created_at).format("DD/MM/YYYY [às] HH[h]mm")}</div>
-      </NavWrapper>
-      <PostDesc>
-        <p>{p.content}</p>
-      </PostDesc>
-    </PostItemStyle>
+            {p.name} - <span>@{p.username}</span>
+          </div>
+          {p.username === session.username && <BsTrash3 onClick={deletePost} />}
+        </PostHeader>
+        <PostContent>
+          <img
+            src={p.image}
+            alt={`post-${p.id}`}
+            onError={(e) => (e.target.src = errorLoadingImagePost)}
+            onClick={() => setShowFullImage(!showFullImage)}
+          />
+        </PostContent>
+        <NavWrapper>
+          <nav>
+            {likePost ? (
+              <AiFillHeart
+                size={17}
+                cursor="pointer"
+                style={{ marginRight: "5px" }}
+                color="rgb(250,0,0)"
+                onClick={likePostReq}
+              />
+            ) : (
+              <AiOutlineHeart
+                size={17}
+                cursor="pointer"
+                style={{ marginRight: "5px" }}
+                onClick={likePostReq}
+              />
+            )}{" "}
+            {likeCount > 0 && likeCount}{" "}
+            {likeCount > 1
+              ? "Pessoas gostaram deste post!"
+              : likeCount === 1
+              ? "Pessoa gostou deste post!"
+              : "Ninguem gostou deste post ainda"}
+          </nav>
+          <div>{dayjs(p.created_at).format("DD/MM/YYYY [às] HH[h]mm")}</div>
+        </NavWrapper>
+        <PostDesc>
+          <p>{p.content}</p>
+        </PostDesc>
+      </PostItemStyle>
+    </>
   );
 }
 
@@ -151,7 +163,7 @@ const PostItemStyle = styled.li`
   }
   img {
     border-radius: 5px;
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     height: 350px;
     border: 1px solid lightGray;
@@ -210,5 +222,24 @@ const PostHeader = styled.div`
   }
   svg:last-child {
     cursor: pointer;
+  }
+`;
+
+const BigImageContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  img {
+    background: transparent;
+    object-fit: contain;
+    max-height: 90%;
+    width: 90%;
   }
 `;
